@@ -9,7 +9,7 @@ namespace CustomRenderer
 
 		public App ()
 		{
-//#if __ANDROID__
+           //#if __ANDROID__
 //            var cantidadCuenta = AccountStore.Create(Forms.Context).FindAccountsForService(Application.Current.ToString()).Count();
 
 //            if (cantidadCuenta == 0)
@@ -21,7 +21,7 @@ namespace CustomRenderer
 //                MainPage = new AppUnap.PPrincipal();
 //            }
 //#endif
-            MainPage = new MapPage ();
+            MainPage = new MapPage (null);
 		}
 
 		protected override void OnStart ()

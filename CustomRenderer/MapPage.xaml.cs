@@ -4,24 +4,13 @@ using Xamarin.Forms.Maps;
 using Plugin.Geolocator;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
-using System;
-using System.Net;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using Xamarin.Forms.Xaml;
-using Xamarin.Auth;
 using System.Net.Http;
 
 namespace CustomRenderer
 {
-
     public partial class MapPage : ContentPage
     {
-       
-
-
         string datosOcupacion;
 
         string obtenerDatosOcupacion()
@@ -88,23 +77,18 @@ namespace CustomRenderer
             }
         }
 
-        public MapPage()
+        public MapPage(MapSpan ms)
         {
-
             InitializeComponent();
 
             //customMap.IsShowingUser = true;
             //requestGPSAsync();
-            // ArrayList<tipoDato> = new;
             var datoOcupacion = obtenerDatosOcupacion();
             var datosResultadoOcupacion = JArray.Parse(datosOcupacion);
             //findMe();
             string estadoletra = "";
             bool estadoBool;
-            ///////////////////////////////////////////////////
-
-            //////////////////////////
-
+            
             int counter = 0;
 
             var bActualizar = new Button()
@@ -114,9 +98,10 @@ namespace CustomRenderer
                 BackgroundColor = Xamarin.Forms.Color.Red,
                 Image = "update.png",
                 BorderRadius = 15,
-                BorderColor= Xamarin.Forms.Color.Black,
-                BorderWidth=3
+                BorderColor = Xamarin.Forms.Color.Black,
+                BorderWidth = 3
             };
+
             var customMap = new CustomMap
             {
                 MapType = MapType.Street,
@@ -125,6 +110,12 @@ namespace CustomRenderer
             };
 
             customMap.CustomPins = new List<CustomPin>();
+
+            bActualizar.Clicked += async (sender, e) =>
+            {
+                MapSpan mapsector = customMap.VisibleRegion;
+                await Navigation.PushModalAsync(new MapPage(mapsector));
+            };                 
 
             foreach (var v in datosResultadoOcupacion)
             {
@@ -145,9 +136,9 @@ namespace CustomRenderer
                         Type = PinType.Place,
                         Position = new Position((double)datosResultadoOcupacion[counter]["coordenadas_lat"], (double)datosResultadoOcupacion[counter]["coordenadas_lon"]),
                         Label = estadoletra,
-                        Address = "Calle "+datosResultadoOcupacion[counter]["calle"].ToString()+" con " + datosResultadoOcupacion[counter]["interseccion1"].ToString()
+                        Address = "Calle " + datosResultadoOcupacion[counter]["calle"].ToString() + " con " + datosResultadoOcupacion[counter]["interseccion1"].ToString()
                     },
-                    Id = "id: "+counter,
+                    Id = "id: " + counter,
                     Url = "",
                     Estado = estadoBool
                 };
@@ -160,7 +151,16 @@ namespace CustomRenderer
             }
             // dont delete below code ,they will save you if timer doesnt work .
 
-            customMap.MoveToRegion (MapSpan.FromCenterAndRadius (customMap.CustomPins [0].Pin.Position, Distance.FromMiles (0.20)));
+            if (ms == null)
+            {
+                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(customMap.CustomPins[0].Pin.Position, Distance.FromMiles(0.20)));
+            }
+            else
+            {
+                customMap.MoveToRegion(ms);
+            }
+            
+
             Content = new StackLayout
             {
                 Children =
@@ -170,8 +170,6 @@ namespace CustomRenderer
                 }
             };
         }
-
-
     }
 }
 
