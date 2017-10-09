@@ -9,20 +9,22 @@ namespace CustomRenderer
 
 		public App ()
 		{
-           //#if __ANDROID__
-//            var cantidadCuenta = AccountStore.Create(Forms.Context).FindAccountsForService(Application.Current.ToString()).Count();
+            //#if __ANDROID__
+            //            var cantidadCuenta = AccountStore.Create(Forms.Context).FindAccountsForService(Application.Current.ToString()).Count();
 
-//            if (cantidadCuenta == 0)
-//            {
-//                MainPage = new AppUnap.PLogin();
-//            }
-//            else
-//            {
-//                MainPage = new AppUnap.PPrincipal();
-//            }
-//#endif
-            MainPage = new MapPage (null);
-		}
+            //            if (cantidadCuenta == 0)
+            //            {
+            //                MainPage = new AppUnap.PLogin();
+            //            }
+            //            else
+            //            {
+            //                MainPage = new AppUnap.PPrincipal();
+            //            }
+            //#endif
+           
+
+            MainPage = new NavigationPage(new MapPage(null));
+        }
 
 		protected override void OnStart ()
 		{

@@ -81,15 +81,17 @@ namespace CustomRenderer
         {
             InitializeComponent();
 
-            //customMap.IsShowingUser = true;
+            
             //requestGPSAsync();
             var datoOcupacion = obtenerDatosOcupacion();
             var datosResultadoOcupacion = JArray.Parse(datosOcupacion);
-            //findMe();
+            findMe();
             string estadoletra = "";
             bool estadoBool;
             
             int counter = 0;
+
+
 
             var bActualizar = new Button()
             {
@@ -108,13 +110,13 @@ namespace CustomRenderer
                 WidthRequest = App.ScreenWidth,
                 //HeightRequest = App.ScreenHeight
             };
-
+            customMap.IsShowingUser = true;
             customMap.CustomPins = new List<CustomPin>();
 
             bActualizar.Clicked += async (sender, e) =>
             {
                 MapSpan mapsector = customMap.VisibleRegion;
-                await Navigation.PushModalAsync(new MapPage(mapsector));
+                await Navigation.PushAsync(new MapPage(mapsector));
             };                 
 
             foreach (var v in datosResultadoOcupacion)
@@ -153,7 +155,7 @@ namespace CustomRenderer
 
             if (ms == null)
             {
-                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(customMap.CustomPins[0].Pin.Position, Distance.FromMiles(0.20)));
+                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(customMap.CustomPins[0].Pin.Position, Distance.FromMiles(0.6)));
             }
             else
             {
