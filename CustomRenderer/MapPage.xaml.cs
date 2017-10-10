@@ -27,7 +27,7 @@ namespace CustomRenderer
 
 
 
-            var bActualizar = new Button()
+            var btnActualizar = new Button()
             {
                 WidthRequest = App.ScreenWidth/2,
                 HeightRequest = App.ScreenHeight/10,
@@ -50,12 +50,11 @@ namespace CustomRenderer
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
             };
-            customMap.IsShowingUser = true;
+            
             customMap.CustomPins = new List<CustomPin>();
 
-            bActualizar.Clicked += (sender, e) =>
+            btnActualizar.Clicked += (sender, e) =>
             {
-
                 int numExistingPages = Navigation.NavigationStack.Count;
 
                 if (numExistingPages == 2)
@@ -121,7 +120,7 @@ namespace CustomRenderer
                             VerticalOptions = LayoutOptions.End,
                             Children =
                             {
-                            bActualizar
+                            btnActualizar
                             }
                         }
                     }
@@ -159,6 +158,7 @@ namespace CustomRenderer
 
         private async void findMe()
         {
+            customMap.IsShowingUser = true;
             var locator = CrossGeolocator.Current;
             Plugin.Geolocator.Abstractions.Position position = new Plugin.Geolocator.Abstractions.Position();
 

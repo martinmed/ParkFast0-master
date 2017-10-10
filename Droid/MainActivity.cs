@@ -6,7 +6,8 @@ using Android.Widget;
 
 namespace CustomRenderer.Droid
 {
-	[Activity (Label = "ParkFast", Icon = "@drawable/pin", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+	[Activity (Label = "ParkFast", Icon = "@drawable/pin", MainLauncher = true, ConfigurationChanges =
+        ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{
 

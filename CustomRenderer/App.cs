@@ -29,7 +29,7 @@ namespace CustomRenderer
             }
             else
             {
-                MainPage = new NavigationPage(new Page1());
+                MainPage = new NavigationPage(new NoConexion());
             }
 
             bool CheckConnectivity()
@@ -52,29 +52,7 @@ namespace CustomRenderer
 
 		protected override void OnStart ()
 		{
-            bool conectividad = CheckConnectivity();
-            if (conectividad)
-            {
-                MainPage = new NavigationPage(new MapPage(null));
-            }
-            else
-            {
-                MainPage = new NavigationPage(new Page1());
-            }
-
-            bool CheckConnectivity()
-            {
-                var isConnected = CrossConnectivity.Current.IsConnected;
-
-                if (!isConnected)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
+            
         }
 
 		protected override void OnSleep ()
@@ -86,7 +64,7 @@ namespace CustomRenderer
             }
             else
             {
-                MainPage = new NavigationPage(new Page1());
+                MainPage = new NavigationPage(new NoConexion());
             }
 
             bool CheckConnectivity()
@@ -113,7 +91,7 @@ namespace CustomRenderer
             }
             else
             {
-                MainPage = new NavigationPage(new Page1());
+                MainPage = new NavigationPage(new NoConexion());
             }
 
             bool CheckConnectivity()
