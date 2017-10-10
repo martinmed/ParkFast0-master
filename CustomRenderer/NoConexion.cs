@@ -8,10 +8,14 @@ using Xamarin.Forms;
 
 namespace CustomRenderer
 {
+    
     public class NoConexion : ContentPage
     {
+        
         public NoConexion()
         {
+            NavigationPage.SetHasBackButton(this, false);
+            NavigationPage.SetBackButtonTitle(this, "titulo de la pagina");
             Image imgNoConexion = new Image();
             imgNoConexion.Source = "no_conexion.png";
             imgNoConexion.Opacity = 0.2;
