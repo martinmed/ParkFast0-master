@@ -31,6 +31,8 @@ namespace CustomRenderer
             btnReintentar.Margin = Padding = new Thickness(0, 100, 0, 0);
             btnReintentar.Text = "Reintentar";
 
+            
+
             btnReintentar.Clicked += (sender, e) =>
             {
                

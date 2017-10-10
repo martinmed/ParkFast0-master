@@ -20,7 +20,7 @@ namespace CustomRenderer
             var datoOcupacion = obtenerDatosOcupacion();
             var datosResultadoOcupacion = JArray.Parse(datosOcupacion);
             findMe();
-            string estadoletra = "";
+            string estadoletra;
             bool estadoBool;
 
             int counter = 0;
@@ -86,7 +86,7 @@ namespace CustomRenderer
                         Label = estadoletra,
                         Address = "Calle " + datosResultadoOcupacion[counter]["calle"].ToString() + " con " + datosResultadoOcupacion[counter]["interseccion1"].ToString()
                     },
-                    Id = "id: " + counter,
+                    Id = datosResultadoOcupacion[counter]["id_estacionamiento"].ToString(),
                     Url = "",
                     Estado = estadoBool
                 };

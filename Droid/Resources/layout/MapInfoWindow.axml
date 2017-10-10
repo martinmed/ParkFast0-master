@@ -26,5 +26,6 @@
         android:id="@+id/InfoWindowButton"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:src="@drawable/info" />
+        android:src="@drawable/favorito"
+        android:backgroundTint="#ffffffff" />
 </LinearLayout>
