@@ -11,10 +11,19 @@ namespace CustomRenderer
     {
         public Page1()
         {
+            Image noconexion = new Image();
+            noconexion.Source = "no_conexion.png";
+
+            Label lblNoConexion = new Label();
+            lblNoConexion.Text= "Por favor revise su conexión a Internet";
+
             Content = new StackLayout
             {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions=LayoutOptions.Start,
                 Children = {
-                    new Label { Text = "Welcome to Xamarin Forms!" }
+                    noconexion,
+                    lblNoConexion
                 }
             };
         }

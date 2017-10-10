@@ -1,4 +1,5 @@
 ﻿using Xamarin.Forms;
+using Plugin.Connectivity;
 
 namespace CustomRenderer
 {
@@ -21,25 +22,114 @@ namespace CustomRenderer
             //                MainPage = new AppUnap.PPrincipal();
             //            }
             //#endif
-           
+            bool conectividad = CheckConnectivity();
+            if (conectividad)
+            {
+                MainPage = new NavigationPage(new MapPage(null));
+            }
+            else
+            {
+                MainPage = new NavigationPage(new Page1());
+            }
 
-            MainPage = new NavigationPage(new MapPage(null));
+            bool CheckConnectivity()
+            {
+                var isConnected = CrossConnectivity.Current.IsConnected;
+
+                if (!isConnected)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            
         }
+        
 
 		protected override void OnStart ()
 		{
-			// Handle when your app starts
-		}
+            bool conectividad = CheckConnectivity();
+            if (conectividad)
+            {
+                MainPage = new NavigationPage(new MapPage(null));
+            }
+            else
+            {
+                MainPage = new NavigationPage(new Page1());
+            }
+
+            bool CheckConnectivity()
+            {
+                var isConnected = CrossConnectivity.Current.IsConnected;
+
+                if (!isConnected)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
 
 		protected override void OnSleep ()
 		{
-			// Handle when your app sleeps
-		}
+            bool conectividad = CheckConnectivity();
+            if (conectividad)
+            {
+                MainPage = new NavigationPage(new MapPage(null));
+            }
+            else
+            {
+                MainPage = new NavigationPage(new Page1());
+            }
+
+            bool CheckConnectivity()
+            {
+                var isConnected = CrossConnectivity.Current.IsConnected;
+
+                if (!isConnected)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
 
 		protected override void OnResume ()
 		{
-			// Handle when your app resumes
-		}
+            bool conectividad = CheckConnectivity();
+            if (conectividad)
+            {
+                MainPage = new NavigationPage(new MapPage(null));
+            }
+            else
+            {
+                MainPage = new NavigationPage(new Page1());
+            }
+
+            bool CheckConnectivity()
+            {
+                var isConnected = CrossConnectivity.Current.IsConnected;
+
+                if (!isConnected)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
 	}
 }
 
