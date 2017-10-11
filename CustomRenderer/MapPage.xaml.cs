@@ -13,34 +13,10 @@ namespace CustomRenderer
     {
         public MapPage(MapSpan ms)
         {
-            InitializeComponent();
-
-
-            //requestGPSAsync();
-            var datoOcupacion = obtenerDatosOcupacion();
-            var datosResultadoOcupacion = JArray.Parse(datosOcupacion);
-            findMe();
+            string datosOcupacion;
             string estadoletra;
             bool estadoBool;
-
             int counter = 0;
-
-
-
-            var btnActualizar = new Button()
-            {
-                WidthRequest = App.ScreenWidth/2,
-                HeightRequest = App.ScreenHeight/10,
-                Text = "ACTUALIZAR",
-                
-                BackgroundColor = Xamarin.Forms.Color.Red,
-                Image = "update.png",
-                BorderRadius = 15,
-                BorderColor = Xamarin.Forms.Color.Black,
-                BorderWidth = 3,
-                HorizontalOptions= LayoutOptions.Center,
-                
-            };
 
             var customMap = new CustomMap
             {
@@ -48,10 +24,25 @@ namespace CustomRenderer
                 WidthRequest = App.ScreenWidth,
                 HeightRequest = App.ScreenHeight,
                 VerticalOptions = LayoutOptions.Fill,
-                HorizontalOptions = LayoutOptions.Fill
+                HorizontalOptions = LayoutOptions.Fill,
+                IsShowingUser = true,
             };
-            
+
             customMap.CustomPins = new List<CustomPin>();
+
+            var btnActualizar = new Button()
+            {
+                WidthRequest = App.ScreenWidth,
+                HeightRequest = App.ScreenHeight / 10,
+                Text = "ACTUALIZAR",
+
+                BackgroundColor = Xamarin.Forms.Color.Red,
+                Image = "update.png",
+                BorderRadius = 15,
+                BorderColor = Xamarin.Forms.Color.Black,
+                BorderWidth = 3,
+                HorizontalOptions = LayoutOptions.Center,
+            };
 
             btnActualizar.Clicked += (sender, e) =>
             {
@@ -64,6 +55,13 @@ namespace CustomRenderer
                 MapSpan mapsector = customMap.VisibleRegion;
                 Navigation.PushAsync(new MapPage(mapsector));
             };
+
+            InitializeComponent();
+            
+            //requestGPSAsync();
+            datosOcupacion = obtenerDatosOcupacion();
+            var datosResultadoOcupacion = JArray.Parse(datosOcupacion);
+            findMeAsync();
 
             foreach (var v in datosResultadoOcupacion)
             {
@@ -108,33 +106,27 @@ namespace CustomRenderer
                 customMap.MoveToRegion(ms);
             }
 
-
             Content =
-                new AbsoluteLayout
+            new AbsoluteLayout
+            {
+            Children =
                 {
-                    Children =
+                customMap,
+                    new StackLayout
                     {
-                    customMap,
-                        new StackLayout
+                        VerticalOptions = LayoutOptions.End,
+                        Children =
                         {
-                            VerticalOptions = LayoutOptions.End,
-                            Children =
-                            {
-                            btnActualizar
-                            }
+                        btnActualizar
                         }
                     }
-                };
+                }
+            };
         }
-
-                
-                
-        
-
-        string datosOcupacion;
 
         string obtenerDatosOcupacion()
         {
+            string datosOcupacion;
             string url = "http://tesis2017.000webhostapp.com/webservice.php";
             try
             {
@@ -156,14 +148,15 @@ namespace CustomRenderer
             }
         }
 
-        private async void findMe()
+        private async System.Threading.Tasks.Task findMeAsync()
         {
-            customMap.IsShowingUser = true;
+            
             var locator = CrossGeolocator.Current;
             Plugin.Geolocator.Abstractions.Position position = new Plugin.Geolocator.Abstractions.Position();
 
             position = await locator.GetPositionAsync();
             customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(position.Latitude, position.Longitude), Distance.FromMiles(1)));
+            
         }
 
         private async void requestGPSAsync()
@@ -197,8 +190,6 @@ namespace CustomRenderer
 
             }
         }
-
-        
     }
 }
 
