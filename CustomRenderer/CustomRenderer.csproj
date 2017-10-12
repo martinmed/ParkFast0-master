@@ -67,17 +67,17 @@
     <Reference Include="Plugin.Connectivity.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Xam.Plugin.Connectivity.3.0.3\lib\netstandard1.0\Plugin.Connectivity.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Plugin.Geolocator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xam.Plugin.Geolocator.4.0.1\lib\netstandard1.0\Plugin.Geolocator.dll</HintPath>
+    <Reference Include="Plugin.Geolocator, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xam.Plugin.Geolocator.4.1.0\lib\netstandard1.0\Plugin.Geolocator.dll</HintPath>
     </Reference>
-    <Reference Include="Plugin.Geolocator.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xam.Plugin.Geolocator.4.0.1\lib\netstandard1.0\Plugin.Geolocator.Abstractions.dll</HintPath>
+    <Reference Include="Plugin.Geolocator.Abstractions, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xam.Plugin.Geolocator.4.1.0\lib\netstandard1.0\Plugin.Geolocator.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Plugin.Permissions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Plugin.Permissions.2.0.1\lib\netstandard1.0\Plugin.Permissions.dll</HintPath>
+    <Reference Include="Plugin.Permissions, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Plugin.Permissions.2.1.0\lib\netstandard1.0\Plugin.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="Plugin.Permissions.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Plugin.Permissions.2.0.1\lib\netstandard1.0\Plugin.Permissions.Abstractions.dll</HintPath>
+    <Reference Include="Plugin.Permissions.Abstractions, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Plugin.Permissions.2.1.0\lib\netstandard1.0\Plugin.Permissions.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
       <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\Xamarin.iOS\v1.0\System.Net.Http.dll</HintPath>
@@ -108,6 +108,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Xamarin.Forms.2.4.0.282\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.2.4.0.282\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets')" />
 </Project>

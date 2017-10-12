@@ -6,6 +6,7 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System;
 
 namespace CustomRenderer
 {
@@ -42,6 +43,7 @@ namespace CustomRenderer
                 BorderColor = Xamarin.Forms.Color.Black,
                 BorderWidth = 3,
                 HorizontalOptions = LayoutOptions.Center,
+                //AnchorY=
             };
 
             btnActualizar.Clicked += (sender, e) =>
@@ -150,13 +152,10 @@ namespace CustomRenderer
 
         private async System.Threading.Tasks.Task findMeAsync()
         {
-            
+            TimeSpan timeout = new TimeSpan(0, 0, 0, 10);
             var locator = CrossGeolocator.Current;
-            Plugin.Geolocator.Abstractions.Position position = new Plugin.Geolocator.Abstractions.Position();
-
-            position = await locator.GetPositionAsync();
-            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(position.Latitude, position.Longitude), Distance.FromMiles(1)));
-            
+            locator.DesiredAccuracy = 50;
+            var position = await locator.GetPositionAsync(timeout, includeHeading: false); ;
         }
 
         private async void requestGPSAsync()
