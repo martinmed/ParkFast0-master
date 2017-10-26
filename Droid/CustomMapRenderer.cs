@@ -18,7 +18,7 @@ namespace CustomRenderer.Droid
     {
         List<CustomPin> customPins;
         bool isDrawn;
-
+        
         protected override void OnElementChanged(Xamarin.Forms.Platform.Android.ElementChangedEventArgs<Map> e)
         {
             base.OnElementChanged(e);
@@ -95,6 +95,7 @@ namespace CustomRenderer.Droid
 
         public Android.Views.View GetInfoContents(Marker marker)
         {
+            
             var inflater = Android.App.Application.Context.GetSystemService(Context.LayoutInflaterService) as Android.Views.LayoutInflater;
             if (inflater != null)
             {
@@ -120,7 +121,18 @@ namespace CustomRenderer.Droid
 
                 if (infoTitle != null)
                 {
+                    Android.Graphics.Color redandroidcolor = Android.Graphics.Color.Red;
+                    Android.Graphics.Color greenandroidcolor = Android.Graphics.Color.DarkGreen;
+
                     infoTitle.Text = marker.Title;
+                    if (infoTitle.Text == "Estacionamiento Disponible")
+                    {
+                        infoTitle.SetTextColor(greenandroidcolor);
+                    }
+                    else if (infoTitle.Text == "Estacionamiento Ocupado")
+                    {
+                        infoTitle.SetTextColor(redandroidcolor);
+                    }
                 }
                 if (infoSubtitle != null)
                 {

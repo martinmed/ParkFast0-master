@@ -7,6 +7,8 @@ using Plugin.Permissions.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System;
+using System.Diagnostics;
+using System.Net;
 
 namespace CustomRenderer
 {
@@ -18,34 +20,36 @@ namespace CustomRenderer
             string estadoletra;
             bool estadoBool;
             int counter = 0;
-
+            Debug.WriteLine("***********************************************1***************************************");
             var customMap = new CustomMap
-            {
+            {                
                 MapType = MapType.Street,
                 WidthRequest = App.ScreenWidth,
                 HeightRequest = App.ScreenHeight,
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill,
-                IsShowingUser = true,
+                IsShowingUser = true                
             };
 
+            Debug.WriteLine("***********************************************2***************************************");
             customMap.CustomPins = new List<CustomPin>();
 
+            Debug.WriteLine("***********************************************3***************************************");
             var btnActualizar = new Button()
             {
                 WidthRequest = App.ScreenWidth,
                 HeightRequest = App.ScreenHeight / 10,
                 Text = "ACTUALIZAR",
 
-                BackgroundColor = Xamarin.Forms.Color.Red,
+                BackgroundColor = Xamarin.Forms.Color.FromHex("#FFEBAF"),
                 Image = "update.png",
-                BorderRadius = 15,
-                BorderColor = Xamarin.Forms.Color.Black,
-                BorderWidth = 3,
+                BorderRadius = 5,
+                BorderColor = Xamarin.Forms.Color.FromHex("#E8D49C"),
+                BorderWidth = 2,
                 HorizontalOptions = LayoutOptions.Center,
-                //AnchorY=
             };
 
+            Debug.WriteLine("***********************************************4***************************************");
             btnActualizar.Clicked += (sender, e) =>
             {
                 int numExistingPages = Navigation.NavigationStack.Count;
@@ -58,8 +62,10 @@ namespace CustomRenderer
                 Navigation.PushAsync(new MapPage(mapsector));
             };
 
+            Debug.WriteLine("***********************************************5***************************************");
             InitializeComponent();
-            
+
+            Debug.WriteLine("***********************************************6***************************************");
             //requestGPSAsync();
             datosOcupacion = obtenerDatosOcupacion();
             var datosResultadoOcupacion = JArray.Parse(datosOcupacion);
@@ -75,39 +81,50 @@ namespace CustomRenderer
                 else
                 {
                     estadoBool = true;
-                    estadoletra = "Desocupado";
+                    estadoletra = "Disponible";
                 }
+                Uri parkingurl = new Uri(string.Format("geo:0,0?q="
+                    +datosResultadoOcupacion[counter]["coordenadas_lat"]
+                    +","+ datosResultadoOcupacion[counter]["coordenadas_lon"]
+                    +"("
+                    +"Estacionamiento "+estadoletra+")"));
+
                 var pin = new CustomPin()
-                {
-                    Pin = new Pin()
+                {             
+                Pin = new Pin()
                     {
                         Type = PinType.Place,
                         Position = new Position((double)datosResultadoOcupacion[counter]["coordenadas_lat"], (double)datosResultadoOcupacion[counter]["coordenadas_lon"]),
-                        Label = estadoletra,
+                        Label = "Estacionamiento "+estadoletra,
                         Address = "Calle " + datosResultadoOcupacion[counter]["calle"].ToString() + " con " + datosResultadoOcupacion[counter]["interseccion1"].ToString()
                     },
                     Id = datosResultadoOcupacion[counter]["id_estacionamiento"].ToString(),
-                    Url = "",
+                    Url = parkingurl.ToString(),
                     Estado = estadoBool
-                };
+                };                
                 customMap.CustomPins.Add(pin);
                 counter++;
             }
+
+            Debug.WriteLine("***********************************************7***************************************");
             foreach (var pin in customMap.CustomPins)
             {
                 customMap.Pins.Add(pin.Pin);
             }
+
+            Debug.WriteLine("***********************************************8***************************************");
             // dont delete below code ,they will save you if timer doesnt work .
 
             if (ms == null)
             {
-                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(customMap.CustomPins[0].Pin.Position, Distance.FromMiles(0.6)));
+                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(customMap.CustomPins[0].Pin.Position, Distance.FromMiles(0.32)));
             }
             else
             {
                 customMap.MoveToRegion(ms);
             }
 
+            Debug.WriteLine("***********************************************9***************************************");
             Content =
             new AbsoluteLayout
             {
@@ -128,8 +145,12 @@ namespace CustomRenderer
 
         string obtenerDatosOcupacion()
         {
+
+            Debug.WriteLine("***********************************************10***************************************");
             string datosOcupacion;
             string url = "http://tesis2017.000webhostapp.com/webservice.php";
+
+            Debug.WriteLine("***********************************************11***************************************");
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -152,43 +173,21 @@ namespace CustomRenderer
 
         private async System.Threading.Tasks.Task findMeAsync()
         {
+
+            Debug.WriteLine("***********************************************GEOLOCATOR1***************************************");
             TimeSpan timeout = new TimeSpan(0, 0, 0, 10);
+
+            Debug.WriteLine("**********************************************GEOLOCATOR2***************************************");
             var locator = CrossGeolocator.Current;
+
+            Debug.WriteLine("***********************************************GEOLOCATOR3***************************************");
             locator.DesiredAccuracy = 50;
+
+            Debug.WriteLine("***********************************************GEOLOCATOR4***************************************");
             var position = await locator.GetPositionAsync(timeout, includeHeading: false); ;
-        }
 
-        private async void requestGPSAsync()
-        {
-            try
-            {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
-                if (status != PermissionStatus.Granted)
-                {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                    {
-                        await DisplayAlert("Need location", "Gunna need that location", "OK");
-                    }
-
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                    //Best practice to always check that the key exists
-                    if (results.ContainsKey(Permission.Location))
-                        status = results[Permission.Location];
-                }
-                if (status == PermissionStatus.Granted)
-                {
-                    var results = await CrossGeolocator.Current.GetPositionAsync();
-                }
-                else if (status != PermissionStatus.Unknown)
-                {
-                    await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
-                }
-            }
-            catch
-            {
-
-            }
-        }
+            Debug.WriteLine("***********************************************GEOLOCATOR5***************************************");
+        }        
     }
 }
 
