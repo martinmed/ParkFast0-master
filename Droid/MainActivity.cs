@@ -7,12 +7,9 @@ using Android.Widget;
 namespace CustomRenderer.Droid
 {
 	[Activity (Label = "ParkFast", Icon = "@drawable/pin", ConfigurationChanges =
-        ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+        ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{
-
-        
-
         public override void OnBackPressed()
         {           
             FinishAndRemoveTask();
