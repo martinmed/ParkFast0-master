@@ -3,6 +3,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
+using Plugin.Permissions;
 
 namespace CustomRenderer.Droid
 {
@@ -10,6 +11,14 @@ namespace CustomRenderer.Droid
         ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            if ((int)grantResults[0] == 0)
+            {
+                int a = 1;//ACA HAY QUE HACER ALGO!!
+            }
+        }
         public override void OnBackPressed()
         {           
             FinishAndRemoveTask();

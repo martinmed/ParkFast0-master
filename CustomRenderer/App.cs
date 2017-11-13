@@ -1,5 +1,6 @@
 ﻿using Xamarin.Forms;
 using Plugin.Connectivity;
+using Android.Locations;
 
 namespace CustomRenderer
 {
@@ -22,6 +23,7 @@ namespace CustomRenderer
             //                MainPage = new AppUnap.PPrincipal();
             //            }
             //#endif
+            
             bool conectividad = CheckConnectivity();
             if (conectividad)
             {

@@ -10,66 +10,104 @@ using System;
 using System.Diagnostics;
 using System.Net;
 
+//REVISAR LINEA 33!!!
 namespace CustomRenderer
 {
     public partial class MapPage : ContentPage
     {
         public MapPage(MapSpan ms)
         {
+
             string datosOcupacion;
             string estadoletra;
             bool estadoBool;
             int counter = 0;
-            Debug.WriteLine("***********************************************1***************************************");
-            var customMap = new CustomMap
-            {                
-                MapType = MapType.Street,
-                WidthRequest = App.ScreenWidth,
-                HeightRequest = App.ScreenHeight,
-                VerticalOptions = LayoutOptions.Fill,
-                HorizontalOptions = LayoutOptions.Fill,
-                IsShowingUser = true                
-            };
-
-            Debug.WriteLine("***********************************************2***************************************");
+            var customMap = new CustomMap();
+            customMap.MapType = MapType.Street;
+            customMap.WidthRequest = App.ScreenWidth;
+            customMap.HeightRequest = App.ScreenHeight;
+            customMap.VerticalOptions = LayoutOptions.Fill;
+            customMap.HorizontalOptions = LayoutOptions.Fill;
+            if (IsLocationAvailable())
+            {
+                customMap.IsShowingUser = true;
+            }
+            
+            findMeAsync();
+           
             customMap.CustomPins = new List<CustomPin>();
-
-            Debug.WriteLine("***********************************************3***************************************");
+            
             var btnActualizar = new Button()
             {
-                WidthRequest = App.ScreenWidth,
+                WidthRequest = App.ScreenWidth/5,
                 HeightRequest = App.ScreenHeight / 10,
-                Text = "ACTUALIZAR",
-
                 BackgroundColor = Xamarin.Forms.Color.FromHex("#FFEBAF"),
                 Image = "update.png",
-                BorderRadius = 5,
+                BorderRadius = 15,
+                BorderColor = Xamarin.Forms.Color.FromHex("#E8D49C"),
+                BorderWidth = 2,
+                HorizontalOptions = LayoutOptions.Start,
+            };
+
+            var btnLista = new Button()
+            {
+                WidthRequest = App.ScreenWidth / 5,
+                HeightRequest = App.ScreenHeight / 10,
+                BorderRadius = 15,
+                Image = "list48.png",
+                BackgroundColor = Xamarin.Forms.Color.FromHex("#FFEBAF"),
                 BorderColor = Xamarin.Forms.Color.FromHex("#E8D49C"),
                 BorderWidth = 2,
                 HorizontalOptions = LayoutOptions.Center,
             };
 
-            Debug.WriteLine("***********************************************4***************************************");
-            btnActualizar.Clicked += (sender, e) =>
+            btnLista.Clicked += (sender, e) =>
             {
-                int numExistingPages = Navigation.NavigationStack.Count;
-
-                if (numExistingPages == 2)
-                {
-                    Navigation.RemovePage(this);
-                }
-                MapSpan mapsector = customMap.VisibleRegion;
-                Navigation.PushAsync(new MapPage(mapsector));
+                Navigation.PushModalAsync(new PLista());
             };
 
-            Debug.WriteLine("***********************************************5***************************************");
+            
+            btnActualizar.Clicked += (sender, e) =>
+            {
+                UpdateChildrenLayout();
+                //int numExistingPages = Navigation.NavigationStack.Count;
+                //Debug.WriteLine("**********CANTIDAD DE PAGINAS EN EL NAVIGATIONSTACK********: "+numExistingPages.ToString());
+                //if (numExistingPages >= 2)
+                //{
+                //    Navigation.RemovePage(this);
+                //}
+                //MapSpan mapsector = customMap.VisibleRegion;
+                //Navigation.PushModalAsync(new MapPage(mapsector));
+            };
+
+            
             InitializeComponent();
 
-            Debug.WriteLine("***********************************************6***************************************");
+            
             //requestGPSAsync();
             datosOcupacion = obtenerDatosOcupacion();
-            var datosResultadoOcupacion = JArray.Parse(datosOcupacion);
-            findMeAsync();
+            if (datosOcupacion == "error en la conexion")
+            {
+                DisplayAlert("Atención", "No hay conexión", "OK");
+            }
+            var datosResultadoOcupacion = new JArray();
+            try
+            {
+                datosResultadoOcupacion = JArray.Parse(datosOcupacion);
+            }
+            catch
+            {
+                DisplayAlert("Atención", "Servidor inalcanzable, intente mas tarde.", "OK");
+            }
+            if (IsLocationAvailable())
+            {
+                findMeAsync();
+                
+            }
+            else
+            {
+                DisplayAlert("Atención", "Servidor inalcanzable, intente mas tarde.", "OK");
+            }
 
             foreach (var v in datosResultadoOcupacion)
             {
@@ -106,14 +144,10 @@ namespace CustomRenderer
                 counter++;
             }
 
-            Debug.WriteLine("***********************************************7***************************************");
             foreach (var pin in customMap.CustomPins)
             {
                 customMap.Pins.Add(pin.Pin);
             }
-
-            Debug.WriteLine("***********************************************8***************************************");
-            // dont delete below code ,they will save you if timer doesnt work .
 
             if (ms == null)
             {
@@ -124,7 +158,6 @@ namespace CustomRenderer
                 customMap.MoveToRegion(ms);
             }
 
-            Debug.WriteLine("***********************************************9***************************************");
             Content =
             new AbsoluteLayout
             {
@@ -136,21 +169,24 @@ namespace CustomRenderer
                         VerticalOptions = LayoutOptions.End,
                         Children =
                         {
-                        btnActualizar
+                        btnActualizar,
+                        btnLista
                         }
                     }
                 }
             };
         }
 
+        public bool IsLocationAvailable()
+        {
+            return CrossGeolocator.Current.IsGeolocationAvailable;
+        }
+
         string obtenerDatosOcupacion()
         {
-
-            Debug.WriteLine("***********************************************10***************************************");
             string datosOcupacion;
             string url = "http://tesis2017.000webhostapp.com/webservice.php";
 
-            Debug.WriteLine("***********************************************11***************************************");
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -173,20 +209,21 @@ namespace CustomRenderer
 
         private async System.Threading.Tasks.Task findMeAsync()
         {
-
-            Debug.WriteLine("***********************************************GEOLOCATOR1***************************************");
-            TimeSpan timeout = new TimeSpan(0, 0, 0, 10);
-
-            Debug.WriteLine("**********************************************GEOLOCATOR2***************************************");
-            var locator = CrossGeolocator.Current;
-
-            Debug.WriteLine("***********************************************GEOLOCATOR3***************************************");
-            locator.DesiredAccuracy = 50;
-
-            Debug.WriteLine("***********************************************GEOLOCATOR4***************************************");
-            var position = await locator.GetPositionAsync(timeout, includeHeading: false); ;
-
-            Debug.WriteLine("***********************************************GEOLOCATOR5***************************************");
+            try
+            {
+                TimeSpan timeout = new TimeSpan(0, 0, 0, 10);
+                
+                var locator = CrossGeolocator.Current;
+                
+                locator.DesiredAccuracy = 50;
+                
+                var position = await locator.GetPositionAsync(timeout, includeHeading: false);
+            }
+            catch(OperationCanceledException ex)
+            {
+                await DisplayAlert("Atención", "Por favor active el GPS de su celular. "+ex, "OK");
+            }
+            
         }        
     }
 }
