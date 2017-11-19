@@ -21,11 +21,5 @@
             android:layout_height="wrap_content"
             android:text="InfoWindowSubtitle"
             android:textColor="@android:color/black" />
-    </LinearLayout>
-    <ImageButton
-        android:id="@+id/InfoWindowButton"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:src="@drawable/favorito"
-        android:backgroundTint="#ffffffff" />
+    </LinearLayout>    
 </LinearLayout>

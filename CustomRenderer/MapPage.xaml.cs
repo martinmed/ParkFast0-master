@@ -14,10 +14,10 @@ using System.Net;
 namespace CustomRenderer
 {
     public partial class MapPage : ContentPage
-    {
+    {        
         public MapPage(MapSpan ms)
         {
-
+            findMeAsync();
             string datosOcupacion;
             string estadoletra;
             bool estadoBool;
@@ -26,14 +26,14 @@ namespace CustomRenderer
             customMap.MapType = MapType.Street;
             customMap.WidthRequest = App.ScreenWidth;
             customMap.HeightRequest = App.ScreenHeight;
-            customMap.VerticalOptions = LayoutOptions.Fill;
-            customMap.HorizontalOptions = LayoutOptions.Fill;
+            customMap.VerticalOptions = LayoutOptions.FillAndExpand;
+            customMap.HorizontalOptions = LayoutOptions.FillAndExpand;
             if (IsLocationAvailable())
             {
                 customMap.IsShowingUser = true;
             }
             
-            findMeAsync();
+            
            
             customMap.CustomPins = new List<CustomPin>();
             
@@ -69,21 +69,17 @@ namespace CustomRenderer
             
             btnActualizar.Clicked += (sender, e) =>
             {
-                UpdateChildrenLayout();
-                //int numExistingPages = Navigation.NavigationStack.Count;
-                //Debug.WriteLine("**********CANTIDAD DE PAGINAS EN EL NAVIGATIONSTACK********: "+numExistingPages.ToString());
-                //if (numExistingPages >= 2)
-                //{
-                //    Navigation.RemovePage(this);
-                //}
-                //MapSpan mapsector = customMap.VisibleRegion;
-                //Navigation.PushModalAsync(new MapPage(mapsector));
+                //UpdateChildrenLayout();//puede q sirva este metodo
+                int numExistingPages = Navigation.NavigationStack.Count;
+                Debug.WriteLine("**********CANTIDAD DE PAGINAS EN EL NAVIGATIONSTACK********: " + numExistingPages.ToString());
+                if (numExistingPages >= 2)
+                {
+                    Navigation.RemovePage(this);
+                }
+                MapSpan mapsector = customMap.VisibleRegion;
+                Navigation.PushModalAsync(new MapPage(mapsector));
             };
-
-            
-            InitializeComponent();
-
-            
+                       
             //requestGPSAsync();
             datosOcupacion = obtenerDatosOcupacion();
             if (datosOcupacion == "error en la conexion")
@@ -101,6 +97,7 @@ namespace CustomRenderer
             }
             if (IsLocationAvailable())
             {
+                //PREGUNTA: como se ejecuta este metodo de manera asincrona?
                 findMeAsync();
                 
             }
@@ -108,9 +105,10 @@ namespace CustomRenderer
             {
                 DisplayAlert("Atención", "Servidor inalcanzable, intente mas tarde.", "OK");
             }
-
+            InitializeComponent();
             foreach (var v in datosResultadoOcupacion)
             {
+                string calle = "";
                 if ((int)datosResultadoOcupacion[counter]["estado"] == 1)
                 {
                     estadoBool = false;
@@ -121,6 +119,11 @@ namespace CustomRenderer
                     estadoBool = true;
                     estadoletra = "Disponible";
                 }
+                if (datosResultadoOcupacion[counter]["calle"].ToString().Length != 0)
+                {
+                    calle = "Calle " + datosResultadoOcupacion[counter]["calle"].ToString() + " con " + datosResultadoOcupacion[counter]["interseccion1"].ToString();
+                }
+       
                 Uri parkingurl = new Uri(string.Format("geo:0,0?q="
                     +datosResultadoOcupacion[counter]["coordenadas_lat"]
                     +","+ datosResultadoOcupacion[counter]["coordenadas_lon"]
@@ -134,7 +137,7 @@ namespace CustomRenderer
                         Type = PinType.Place,
                         Position = new Position((double)datosResultadoOcupacion[counter]["coordenadas_lat"], (double)datosResultadoOcupacion[counter]["coordenadas_lon"]),
                         Label = "Estacionamiento "+estadoletra,
-                        Address = "Calle " + datosResultadoOcupacion[counter]["calle"].ToString() + " con " + datosResultadoOcupacion[counter]["interseccion1"].ToString()
+                        Address = calle
                     },
                     Id = datosResultadoOcupacion[counter]["id_estacionamiento"].ToString(),
                     Url = parkingurl.ToString(),
@@ -175,6 +178,7 @@ namespace CustomRenderer
                     }
                 }
             };
+            
         }
 
         public bool IsLocationAvailable()
@@ -211,7 +215,7 @@ namespace CustomRenderer
         {
             try
             {
-                TimeSpan timeout = new TimeSpan(0, 0, 0, 10);
+                TimeSpan timeout = new TimeSpan(9, 9, 9, 10);
                 
                 var locator = CrossGeolocator.Current;
                 

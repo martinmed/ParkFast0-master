@@ -33,6 +33,11 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CheckItem.cs" />
+    <Compile Include="HomePage.cs" />
+    <Compile Include="IDevice.cs" />
+    <Compile Include="PInicio.cs" />
+    <Compile Include="SelectMultipleBasePage.cs" />
     <Compile Include="ViewModels\CLista.cs" />
     <Compile Include="NoConexion.cs" />
     <Compile Include="Views\PLista.cs" />

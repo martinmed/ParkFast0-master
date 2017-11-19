@@ -24,14 +24,14 @@ namespace CustomRenderer
             ListView lstView = new ListView();
 
             lstView.ItemTapped += async (sender, e) =>
-            {                
+            {
                 var datosEstacionamientoSeleccionado = JsonConvert.SerializeObject(e.Item);
                 objetoEstacionamiento = JsonConvert.DeserializeObject<CLista>(datosEstacionamientoSeleccionado);
-                float estacionamiento_Lat= objetoEstacionamiento.coord_lat;
+                float estacionamiento_Lat = objetoEstacionamiento.coord_lat;
                 float estacionamiento_Lon = objetoEstacionamiento.coord_lon;
                 Position estacionamiento_Position = new Position(estacionamiento_Lat, estacionamiento_Lon);
                 MapSpan mapspan = new MapSpan(estacionamiento_Position, 0.00272, 0.00272);
-                
+
                 await Navigation.PushModalAsync(new MapPage(mapspan));
             };
             Label lbl_Titulo = new Label()
@@ -41,14 +41,14 @@ namespace CustomRenderer
                 FontSize = 32,
                 HorizontalOptions = LayoutOptions.Center,
                 BackgroundColor = Color.White,
-                TextColor=Color.SlateGray,
-                WidthRequest=App.ScreenWidth,
-                HorizontalTextAlignment=TextAlignment.Center,
+                TextColor = Color.SlateGray,
+                WidthRequest = App.ScreenWidth,
+                HorizontalTextAlignment = TextAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 5)
             };
 
             lstView.Header = lbl_Titulo;
-            
+
 
             lstView.RowHeight = 60;
             lstView.WidthRequest = App.ScreenWidth;
@@ -70,7 +70,7 @@ namespace CustomRenderer
             {
                 DisplayAlert("Atención", "Servidor inalcanzable, intente mas tarde.", "OK");
             }
-            
+
 
             foreach (var v in datosResultadoOcupacion)
             {
@@ -85,13 +85,19 @@ namespace CustomRenderer
                     estadoletra = "Disponible";
                 }
                 CLista clista = new CLista();
-
-                clista.Calle = datosResultadoOcupacion[counter]["calle"].ToString() + " con " + datosResultadoOcupacion[counter]["interseccion1"].ToString();
+                if (datosResultadoOcupacion[counter]["calle"].ToString() == "")
+                {
+                    clista.Calle = datosResultadoOcupacion[counter]["descripcion"].ToString();
+                }
+                else
+                {
+                    clista.Calle = datosResultadoOcupacion[counter]["calle"].ToString() + " con " + datosResultadoOcupacion[counter]["interseccion1"].ToString();
+                }
 
                 clista.Estado = estadoletra;
 
-                float estacionamiento_lat= (float)datosResultadoOcupacion[counter]["coordenadas_lat"];
-                float estacionamiento_lon= (float)datosResultadoOcupacion[counter]["coordenadas_lon"];
+                float estacionamiento_lat = (float)datosResultadoOcupacion[counter]["coordenadas_lat"];
+                float estacionamiento_lon = (float)datosResultadoOcupacion[counter]["coordenadas_lon"];
 
                 clista.coord_lat = estacionamiento_lat;
                 clista.coord_lon = estacionamiento_lon;
@@ -99,7 +105,7 @@ namespace CustomRenderer
                 TimeSpan timeout = new TimeSpan(0, 0, 0, 10);
 
                 var locator = CrossGeolocator.Current;
-                string a =locator.GetPositionAsync().ToString();
+                string a = locator.GetPositionAsync().ToString();
                 var position_a = new Position(estacionamiento_lon, estacionamiento_lon);
 
                 var position_b = locator.GetPositionAsync(timeout, includeHeading: false);
@@ -109,24 +115,48 @@ namespace CustomRenderer
                 //////////////////////////    Debug.WriteLine("ESPERANDO");
                 //////////////////////////}
 
-                if (estadoletra=="Ocupado")
+                if (estadoletra == "Ocupado")
                 {
                     clista.Image = "pin2.png";
+
                 }
                 else
                 {
                     clista.Image = "pin.png";
                 }
+                string b = clista.Estado.ToString();
 
                 claselista.Add(clista);
 
                 counter++;
             }
-
-
+            Button backButton = new Button()
+            {
+                Image = "back.png",
+                Text="Volver"
+            };
+            backButton.Clicked += (sender, e) =>
+            {
+                Navigation.PushModalAsync(new MapPage(null));
+            };
             lstView.ItemsSource = claselista;
-            Content = lstView;
+            Content =
+                new StackLayout
+                {
+                    Children =
+                        {
+                        lstView,
+                            new StackLayout
+                            {
+                            Children =
+                                {
+                                backButton                        
+                                }
+                            }
+                        }
+                };
         }
+                
 
         //public static double DistanceBetween(Position a, Position b)
         //{
@@ -173,9 +203,11 @@ namespace CustomRenderer
                 //instantiate each of our views
                 var image = new Image();
                 var calleLabel = new Label();
+                calleLabel.Margin = new Thickness(10,0,0,0);
                 calleLabel.TextColor = Color.Black;
                 var estadoLabel = new Label();
                 estadoLabel.TextColor = Color.Black;
+                estadoLabel.Margin = new Thickness(10,0,0,0);
                 var verticaLayout = new StackLayout();
                 var coord_latLabel = new Label();
                 var coord_lonLabel = new Label();

@@ -38,8 +38,6 @@ namespace CustomRenderer
                
                 if (CheckConnectivity())
                 {
-                     
-
                     if (Navigation.NavigationStack.Count == 2)
                     {
                         Navigation.RemovePage(this);
@@ -48,13 +46,7 @@ namespace CustomRenderer
                 }
                 else
                 {
-                    int numExistingPages = Navigation.NavigationStack.Count;
 
-                    if (numExistingPages == 2)
-                    {
-                        Navigation.RemovePage(this);
-                    }
-                    Navigation.PushAsync(new NoConexion());
                 }
             };
 

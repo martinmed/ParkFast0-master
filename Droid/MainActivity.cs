@@ -14,10 +14,10 @@ namespace CustomRenderer.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-            if ((int)grantResults[0] == 0)
-            {
-                int a = 1;//ACA HAY QUE HACER ALGO!!
-            }
+            //if ((int)grantResults[0] == 0)
+            //{
+                
+            //}
         }
         public override void OnBackPressed()
         {           
@@ -35,8 +35,8 @@ namespace CustomRenderer.Droid
 			var height = Resources.DisplayMetrics.HeightPixels;
 			var density = Resources.DisplayMetrics.Density;
 
-			App.ScreenWidth = (width - 0.5f) / density;
-			App.ScreenHeight = (height - 0.5f) / density;
+			App.ScreenWidth = (width) / density;
+			App.ScreenHeight = (height) / density;
 
 			LoadApplication (new App ());
 		}
