@@ -9,6 +9,7 @@ using System.Net.Http;
 using System;
 using System.Diagnostics;
 using System.Net;
+using Plugin.Connectivity;
 
 //REVISAR LINEA 33!!!
 namespace CustomRenderer
@@ -28,7 +29,7 @@ namespace CustomRenderer
             customMap.HeightRequest = App.ScreenHeight;
             customMap.VerticalOptions = LayoutOptions.FillAndExpand;
             customMap.HorizontalOptions = LayoutOptions.FillAndExpand;
-            if (IsLocationAvailable())
+            if (IsLocationAvailable() && IsLocationEnabled())
             {
                 customMap.IsShowingUser = true;
             }
@@ -95,16 +96,8 @@ namespace CustomRenderer
             {
                 DisplayAlert("Atención", "Servidor inalcanzable, intente mas tarde.", "OK");
             }
-            if (IsLocationAvailable())
-            {
-                //PREGUNTA: como se ejecuta este metodo de manera asincrona?
-                findMeAsync();
-                
-            }
-            else
-            {
-                DisplayAlert("Atención", "Servidor inalcanzable, intente mas tarde.", "OK");
-            }
+            
+           
             InitializeComponent();
             foreach (var v in datosResultadoOcupacion)
             {
@@ -181,34 +174,62 @@ namespace CustomRenderer
             
         }
 
+        public bool IsLocationEnabled()
+        {
+            return CrossGeolocator.Current.IsGeolocationEnabled;
+        }
+
         public bool IsLocationAvailable()
         {
             return CrossGeolocator.Current.IsGeolocationAvailable;
         }
 
+        bool CheckConnectivity()
+        {
+            var isConnected = CrossConnectivity.Current.IsConnected;
+
+            if (!isConnected)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         string obtenerDatosOcupacion()
         {
-            string datosOcupacion;
-            string url = "http://tesis2017.000webhostapp.com/webservice.php";
-
-            try
+            if (CheckConnectivity())
             {
-                using (HttpClient client = new HttpClient())
+                string datosOcupacion;
+                string url = "http://tesis2017.000webhostapp.com/webservice.php";
+
+                try
                 {
-                    using (HttpResponseMessage response = client.GetAsync(url).Result)
+                    using (HttpClient client = new HttpClient())
                     {
-                        using (HttpContent content = response.Content)
+                        using (HttpResponseMessage response = client.GetAsync(url).Result)
                         {
-                            datosOcupacion = content.ReadAsStringAsync().Result;
-                            return datosOcupacion;
+                            using (HttpContent content = response.Content)
+                            {
+                                datosOcupacion = content.ReadAsStringAsync().Result;
+                                return datosOcupacion;
+                            }
                         }
                     }
                 }
+                catch
+                {
+                    return "error en la conexion";
+                }
             }
-            catch
+            else
             {
+                new NavigationPage(new NoConexion());
                 return "error en la conexion";
             }
+                
         }
 
         private async System.Threading.Tasks.Task findMeAsync()

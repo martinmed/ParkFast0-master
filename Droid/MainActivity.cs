@@ -14,10 +14,10 @@ namespace CustomRenderer.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-            //if ((int)grantResults[0] == 0)
-            //{
-                
-            //}
+            if ((int)grantResults[0] == 0)
+            {
+                LoadApplication(new App());
+            }
         }
         public override void OnBackPressed()
         {           

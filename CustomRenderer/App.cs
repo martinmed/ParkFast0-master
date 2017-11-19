@@ -16,8 +16,6 @@ namespace CustomRenderer
         decimal lon;
         string slat;
         string slon;
-        string slat2;
-        string slon2;
         string deviceIdentifier;
         string ciudad;
 
@@ -46,8 +44,7 @@ namespace CustomRenderer
         }        
         protected override async void OnStart()
         {
-            string respuesta;
-            if (IsLocationAvailable() && CheckConnectivity())
+            if (IsLocationAvailable() && CheckConnectivity() && IsLocationEnabled())
             {
                 await findMeAsync();
                 IDevice device = DependencyService.Get<IDevice>();
@@ -55,8 +52,12 @@ namespace CustomRenderer
                 string location = obtener_Ciudad();
                 JObject jlocation = JObject.Parse(location);
                 ciudad = jlocation["results"][0]["locations"][0]["adminArea5"].ToString();
-                insertar_acceso();                               
-            }            
+                insertar_acceso();
+            }
+            else
+            {
+                new NavigationPage(new NoConexion());
+            }
         }
 
         string insertar_acceso()
@@ -86,39 +87,56 @@ namespace CustomRenderer
                     return "error en la conexion";
                 }
             }
-            return "0";
+            else
+            {
+                new NavigationPage(new NoConexion());
+                return "0";
+            }
+            
            
             
         }
         string obtener_Ciudad()
         {
-            string datosUbicacion;
-            
-            string url2 = "https://www.mapquestapi.com/geocoding/v1/reverse?key=OA8B0RAywUeRc5EZnDNBArVuzAqXbjNT&location="+slat+"%2C"+slon+"&outFormat=json&thumbMaps=false";
-
-            try
+            if (CheckConnectivity())
             {
-                using (HttpClient client = new HttpClient())
+                string datosUbicacion;
+
+                string url2 = "https://www.mapquestapi.com/geocoding/v1/reverse?key=OA8B0RAywUeRc5EZnDNBArVuzAqXbjNT&location=" + slat + "%2C" + slon + "&outFormat=json&thumbMaps=false";
+
+                try
                 {
-                    using (HttpResponseMessage response = client.GetAsync(url2).Result)
+                    using (HttpClient client = new HttpClient())
                     {
-                        using (HttpContent content = response.Content)
+                        using (HttpResponseMessage response = client.GetAsync(url2).Result)
                         {
-                            datosUbicacion = content.ReadAsStringAsync().Result;
-                            return datosUbicacion;
+                            using (HttpContent content = response.Content)
+                            {
+                                datosUbicacion = content.ReadAsStringAsync().Result;
+                                return datosUbicacion;
+                            }
                         }
                     }
                 }
+                catch
+                {
+                    return "error en la conexion";
+                }
             }
-            catch
+            else
             {
-                return "error en la conexion";
-            }
+                new NavigationPage(new NoConexion());
+                return "error en la conexion";                
+            }            
         }
 
         public bool IsLocationAvailable()
         {
             return CrossGeolocator.Current.IsGeolocationAvailable;
+        }
+        public bool IsLocationEnabled()
+        {
+            return CrossGeolocator.Current.IsGeolocationEnabled;
         }
 
         bool CheckConnectivity()
@@ -144,7 +162,7 @@ namespace CustomRenderer
                 var locator = CrossGeolocator.Current;
 
                 locator.DesiredAccuracy = 50;
-                if (IsLocationAvailable())
+                if (IsLocationAvailable() && IsLocationEnabled())
                 {
                     var position = await locator.GetPositionAsync(timeout, includeHeading: false);
                     lat = (decimal)position.Latitude;

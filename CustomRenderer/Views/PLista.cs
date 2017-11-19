@@ -7,6 +7,7 @@ using Xamarin.Forms.Maps;
 using Newtonsoft.Json;
 using Plugin.Geolocator;
 using System.Diagnostics;
+using Plugin.Connectivity;
 
 namespace CustomRenderer
 {
@@ -156,7 +157,20 @@ namespace CustomRenderer
                         }
                 };
         }
-                
+
+        bool CheckConnectivity()
+        {
+            var isConnected = CrossConnectivity.Current.IsConnected;
+
+            if (!isConnected)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         //public static double DistanceBetween(Position a, Position b)
         //{
@@ -170,30 +184,36 @@ namespace CustomRenderer
 
         string obtenerDatosOcupacion()
         {
-
-
-            string datosOcupacion;
-            string url = "http://tesis2017.000webhostapp.com/webservice.php";
-
-
-            try
+            if (CheckConnectivity())
             {
-                using (HttpClient client = new HttpClient())
+                string datosOcupacion;
+                string url = "http://tesis2017.000webhostapp.com/webservice.php";
+
+
+                try
                 {
-                    using (HttpResponseMessage response = client.GetAsync(url).Result)
+                    using (HttpClient client = new HttpClient())
                     {
-                        using (HttpContent content = response.Content)
+                        using (HttpResponseMessage response = client.GetAsync(url).Result)
                         {
-                            datosOcupacion = content.ReadAsStringAsync().Result;
-                            return datosOcupacion;
+                            using (HttpContent content = response.Content)
+                            {
+                                datosOcupacion = content.ReadAsStringAsync().Result;
+                                return datosOcupacion;
+                            }
                         }
                     }
                 }
+                catch
+                {
+                    return "error en la conexion";
+                }
             }
-            catch
+            else
             {
+                new NavigationPage(new NoConexion());
                 return "error en la conexion";
-            }
+            }           
         }
 
         public class CustomCell : ViewCell
