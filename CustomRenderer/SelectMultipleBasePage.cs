@@ -95,7 +95,7 @@ namespace CustomRenderer
         private string insertar_usuario(string entidad)
         {
             string datosEntidad;
-            string url = "http://tesis2017.000webhostapp.com/webservice.php";
+            string url = "http://tesis2017.xyz/webservice.php";
 
             try
             {

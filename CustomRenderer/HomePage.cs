@@ -72,7 +72,7 @@ namespace CustomRenderer
         string obtener_entidades()
         {
             string datosOcupacion;
-            string url = "http://tesis2017.000webhostapp.com/get_entidades.php";
+            string url = "http://tesis2017.xyz/get_entidades.php";
 
             try
             {

@@ -187,7 +187,7 @@ namespace CustomRenderer
             if (CheckConnectivity())
             {
                 string datosOcupacion;
-                string url = "http://tesis2017.000webhostapp.com/webservice.php";
+                string url = "http://tesis2017.xyz/webservice.php";
 
 
                 try

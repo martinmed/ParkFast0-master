@@ -147,13 +147,12 @@ namespace CustomRenderer
 
             if (ms == null)
             {
-                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(customMap.CustomPins[0].Pin.Position, Distance.FromMiles(0.32)));
+                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-38.738580, -72.598367), Distance.FromMiles(0.3)));
             }
             else
             {
                 customMap.MoveToRegion(ms);
             }
-
             Content =
             new AbsoluteLayout
             {
@@ -203,7 +202,7 @@ namespace CustomRenderer
             if (CheckConnectivity())
             {
                 string datosOcupacion;
-                string url = "http://tesis2017.000webhostapp.com/webservice.php";
+                string url = "http://tesis2017.xyz/webservice.php";
 
                 try
                 {

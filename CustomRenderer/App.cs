@@ -66,7 +66,7 @@ namespace CustomRenderer
             {
                 string respuesta;
 
-                string url1 = "http://tesis2017.000webhostapp.com/user_insert.php?uID=" + deviceIdentifier + "&ciudad=" + ciudad;
+                string url1 = "http://tesis2017.xyz/user_insert.php?uID=" + deviceIdentifier + "&ciudad=" + ciudad;
 
                 try
                 {

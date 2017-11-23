@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
 using Plugin.Permissions;
+using System.Diagnostics;
 
 namespace CustomRenderer.Droid
 {
@@ -11,13 +12,23 @@ namespace CustomRenderer.Droid
         ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        public override async void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-            if ((int)grantResults[0] == 0)
             {
-                LoadApplication(new App());
-            }
+                try
+                {
+                    if ((int)grantResults[0] == 0)
+                    {
+                        LoadApplication(new App());
+                    }
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    System.Diagnostics.Debug.WriteLine("*****************"+e.ToString());
+                }
+                
+            }           
         }
         public override void OnBackPressed()
         {           
