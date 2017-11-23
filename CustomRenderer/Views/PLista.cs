@@ -136,9 +136,17 @@ namespace CustomRenderer
                 Image = "back.png",
                 Text="Volver"
             };
-            backButton.Clicked += (sender, e) =>
+            backButton.Clicked +=  async (sender, e) =>
             {
-                Navigation.PushModalAsync(new MapPage(null));
+                if (CheckConnectivity())
+                {
+                    backButton.IsEnabled = false;
+                    await Navigation.PushModalAsync(new MapPage(null));
+                }
+                else
+                {
+                    await Navigation.PushModalAsync(new NoConexion());
+                }
             };
             lstView.ItemsSource = claselista;
             Content =

@@ -35,13 +35,13 @@ namespace CustomRenderer
 
             btnReintentar.Clicked += (sender, e) =>
             {
-               
                 if (CheckConnectivity())
                 {
                     if (Navigation.NavigationStack.Count == 2)
                     {
                         Navigation.RemovePage(this);
                     }
+                    btnReintentar.IsEnabled = false;
                     Navigation.PushAsync(new MapPage(null));
                 }
                 else

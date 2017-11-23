@@ -62,23 +62,39 @@ namespace CustomRenderer
                 HorizontalOptions = LayoutOptions.Center,
             };
 
-            btnLista.Clicked += (sender, e) =>
+            btnLista.Clicked += async (sender, e) =>
             {
-                Navigation.PushModalAsync(new PLista());
+                btnLista.IsEnabled = false;
+                if (CheckConnectivity())
+                {
+                    await Navigation.PushModalAsync(new PLista());
+                }
+                else
+                {
+                    await Navigation.PushModalAsync(new NoConexion());
+                }
+                
             };
 
             
-            btnActualizar.Clicked += (sender, e) =>
+            btnActualizar.Clicked += async (sender, e) =>
             {
-                //UpdateChildrenLayout();//puede q sirva este metodo
-                int numExistingPages = Navigation.NavigationStack.Count;
-                Debug.WriteLine("**********CANTIDAD DE PAGINAS EN EL NAVIGATIONSTACK********: " + numExistingPages.ToString());
-                if (numExistingPages >= 2)
+                if (CheckConnectivity())
                 {
-                    Navigation.RemovePage(this);
+                    btnActualizar.IsEnabled = false;
+                    int numExistingPages = Navigation.NavigationStack.Count;
+                    Debug.WriteLine("**********CANTIDAD DE PAGINAS EN EL NAVIGATIONSTACK********: " + numExistingPages.ToString());
+                    if (numExistingPages >= 2)
+                    {
+                        Navigation.RemovePage(this);
+                    }
+                    MapSpan mapsector = customMap.VisibleRegion;
+                    await Navigation.PushModalAsync(new MapPage(mapsector));
                 }
-                MapSpan mapsector = customMap.VisibleRegion;
-                Navigation.PushModalAsync(new MapPage(mapsector));
+                else
+                {
+                    await Navigation.PushAsync(new NoConexion());
+                }
             };
                        
             //requestGPSAsync();
