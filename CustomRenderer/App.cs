@@ -44,19 +44,24 @@ namespace CustomRenderer
         }        
         protected override async void OnStart()
         {
+            IDevice device = DependencyService.Get<IDevice>();
+            deviceIdentifier = device.GetIdentifier();
+
             if (IsLocationAvailable() && CheckConnectivity() && IsLocationEnabled())
             {
                 await findMeAsync();
-                IDevice device = DependencyService.Get<IDevice>();
-                deviceIdentifier = device.GetIdentifier();
+                
                 string location = obtener_Ciudad();
                 JObject jlocation = JObject.Parse(location);
-                ciudad = jlocation["results"][0]["locations"][0]["adminArea5"].ToString();
-                insertar_acceso();
+                ciudad = jlocation["results"][0]["locations"][0]["adminArea5"].ToString();                
             }
             else
             {
                 new NavigationPage(new NoConexion());
+            }
+            if (CheckConnectivity())
+            {
+                insertar_acceso();
             }
         }
 

@@ -197,7 +197,6 @@ namespace CustomRenderer
                 string datosOcupacion;
                 string url = "http://tesis2017.xyz/webservice.php";
 
-
                 try
                 {
                     using (HttpClient client = new HttpClient())

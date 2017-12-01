@@ -11,7 +11,6 @@ using System.Diagnostics;
 using System.Net;
 using Plugin.Connectivity;
 
-//REVISAR LINEA 33!!!
 namespace CustomRenderer
 {
     public partial class MapPage : ContentPage
@@ -96,8 +95,6 @@ namespace CustomRenderer
                     await Navigation.PushAsync(new NoConexion());
                 }
             };
-                       
-            //requestGPSAsync();
             datosOcupacion = obtenerDatosOcupacion();
             if (datosOcupacion == "error en la conexion")
             {
@@ -163,7 +160,7 @@ namespace CustomRenderer
 
             if (ms == null)
             {
-                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-38.738580, -72.598367), Distance.FromMiles(0.3)));
+                customMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-38.738580, -72.598367), Distance.FromMiles(3)));
             }
             else
             {
@@ -224,8 +221,9 @@ namespace CustomRenderer
                 {
                     using (HttpClient client = new HttpClient())
                     {
+                        client.Timeout = TimeSpan.FromSeconds(10);
                         using (HttpResponseMessage response = client.GetAsync(url).Result)
-                        {
+                        {                            
                             using (HttpContent content = response.Content)
                             {
                                 datosOcupacion = content.ReadAsStringAsync().Result;
