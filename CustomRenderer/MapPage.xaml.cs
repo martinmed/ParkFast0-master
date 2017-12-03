@@ -95,7 +95,7 @@ namespace CustomRenderer
                     await Navigation.PushAsync(new NoConexion());
                 }
             };
-            datosOcupacion = obtenerDatosOcupacion();
+            datosOcupacion = ObtenerDatosOcupacion();
             if (datosOcupacion == "error en la conexion")
             {
                 DisplayAlert("Atención", "No hay conexión", "OK");
@@ -210,7 +210,7 @@ namespace CustomRenderer
             }
         }
 
-        string obtenerDatosOcupacion()
+        string ObtenerDatosOcupacion()
         {
             if (CheckConnectivity())
             {
